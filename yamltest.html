@@ -111,6 +111,10 @@ items:
 
 	<script>
 
+		// Small controller for the view to set initial
+		// input to the YAML sample in the initialinput
+		// text/yaml script-template source, and to set
+		// the YAML data on the direct model when changed
 		sap.ui.controller("local.controller", {
 			onInit : function() {
 				var sYAML = jQuery("#initialinput").html();
@@ -124,12 +128,19 @@ items:
 
 		jQuery.sap.require("qmacro.ui.model.yaml.YAMLModel");
 
+		// Direct model, in other words, we'll set data directly
+		// on it from some input control in the demo
 		var oDirectModel = new qmacro.ui.model.yaml.YAMLModel();
+
+		// Local model, in that we pull data into it from a local
+		// text/yaml script-template source
 		var oLocalModel = new qmacro.ui.model.yaml.YAMLModel();
 		oLocalModel.setYAML(jQuery("#yamldata").html());
 
+		// Remote model, where we retrieve YAML from a resource
 		var oRemoteModel = new qmacro.ui.model.yaml.YAMLModel('data.yaml');
 
+		// Set all models on the view and off we go!
 		sap.ui.xmlview({ viewContent: jQuery("#Main").html() })
 			.setModel(oDirectModel, "direct")
 			.setModel(oLocalModel, "local")
