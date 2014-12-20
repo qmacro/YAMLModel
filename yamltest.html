@@ -30,8 +30,19 @@ consumed:
 - product: Ginger & White Choc Slice
 </script>
 
+<script id="initialinput" type="text/yaml">
+items:
+- intro:   A4786
+  title:   Water Bucket (Filled)
+  number:     1.47
+
+- intro:   E1628
+  title:   High Heeled "Ruby" Slippers
+  number:     100.27
+</script>
 	<script id="Main" type="sapui5/xmlview">
 		<mvc:View
+			controllerName="local.controller"
 			xmlns:mvc="sap.ui.core.mvc"
 			displayBlock="true"
 			xmlns="sap.m">
@@ -41,6 +52,31 @@ consumed:
 					<content>
 						<IconTabBar>
 							<items>
+								<IconTabFilter
+									text="Input">
+									<content>
+										<Text
+											text="Add items in YAML here and see them in the Direct Data tab" />
+										<TextArea id="input"
+											rows="20"
+											cols="50"
+											change="onChange" />
+									</content>
+								</IconTabFilter>
+								<IconTabFilter
+									text="Direct Data">
+									<content>
+										<List
+											items="{direct>/items}">
+											<items>
+												<ObjectListItem
+													title="{direct>title}"
+													intro="{direct>intro}"
+													number="{direct>number}" />
+											</items>
+										</List>
+									</content>
+								</IconTabFilter>
 								<IconTabFilter
 									text="Local Data">
 									<content>
@@ -75,14 +111,27 @@ consumed:
 
 	<script>
 
+		sap.ui.controller("local.controller", {
+			onInit : function() {
+				var sYAML = jQuery("#initialinput").html();
+				this.getView().byId("input").setValue(sYAML);
+			},
+			onChange : function(oEvent) {
+				var oModel = this.getView().getModel("direct");
+				oModel.setYAML(oEvent.getParameter("value"));
+			}
+		});
+
 		jQuery.sap.require("qmacro.ui.model.yaml.YAMLModel");
 
+		var oDirectModel = new qmacro.ui.model.yaml.YAMLModel();
 		var oLocalModel = new qmacro.ui.model.yaml.YAMLModel();
 		oLocalModel.setYAML(jQuery("#yamldata").html());
 
 		var oRemoteModel = new qmacro.ui.model.yaml.YAMLModel('data.yaml');
 
 		sap.ui.xmlview({ viewContent: jQuery("#Main").html() })
+			.setModel(oDirectModel, "direct")
 			.setModel(oLocalModel, "local")
 			.setModel(oRemoteModel, "remote")
 			.placeAt('content');
