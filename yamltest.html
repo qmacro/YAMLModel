@@ -37,15 +37,36 @@ consumed:
 			xmlns="sap.m">
 			<App>
 				<Page
-					title="{/name} in {/location}">
+					title="{local>/name} in {local>/location}">
 					<content>
-						<List
-							items="{/consumed}">
+						<IconTabBar>
 							<items>
-								<DisplayListItem
-									label="{product}" />
+								<IconTabFilter
+									text="Local Data">
+									<content>
+										<List
+											items="{local>/consumed}">
+											<items>
+												<DisplayListItem
+													label="{local>product}" />
+											</items>
+										</List>
+									</content>
+								</IconTabFilter>
+								<IconTabFilter
+									text="Remote Data">
+									<content>
+										<List
+											items="{remote>/employees}">
+											<items>
+												<DisplayListItem
+													label="{remote>name}" />
+											</items>
+										</List>
+									</content>
+								</IconTabFilter>
 							</items>
-						</List>
+						</IconTabBar>
 					</content>
 				</Page>
 			</App>
@@ -56,11 +77,14 @@ consumed:
 
 		jQuery.sap.require("qmacro.ui.model.yaml.YAMLModel");
 
-		var oModel = new qmacro.ui.model.yaml.YAMLModel();
-		oModel.setYAML(jQuery("#yamldata").html());
+		var oLocalModel = new qmacro.ui.model.yaml.YAMLModel();
+		oLocalModel.setYAML(jQuery("#yamldata").html());
+
+		var oRemoteModel = new qmacro.ui.model.yaml.YAMLModel('data.yaml');
 
 		sap.ui.xmlview({ viewContent: jQuery("#Main").html() })
-			.setModel(oModel)
+			.setModel(oLocalModel, "local")
+			.setModel(oRemoteModel, "remote")
 			.placeAt('content');
 
 	</script>
