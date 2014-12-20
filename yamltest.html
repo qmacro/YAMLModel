@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta charset="UTF-8">
+
+	<title>YAMLModel</title>
+
+	<!-- For now, sse the awesome js-yaml lib via RawGit -->
+	<script src="https://rawgit.com/nodeca/js-yaml/master/dist/js-yaml.min.js"></script>
+
+	<script id="sap-ui-bootstrap"
+		type="text/javascript"
+		src="/ui5/latest/resources/sap-ui-core.js"
+		data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-libs="sap.m"
+		data-sap-ui-xx-bindingSyntax="complex"
+		data-sap-ui-resourceroots='{"qmacro" : "./"}'
+	>
+	</script>
+
+<script id="yamldata" type="text/yaml">
+name:
+  DJ
+location:
+  North Tea Power
+consumed:
+- product: Short Long Black
+- product: Flat White
+- product: Ginger & White Choc Slice
+</script>
+
+	<script id="Main" type="sapui5/xmlview">
+		<mvc:View
+			xmlns:mvc="sap.ui.core.mvc"
+			displayBlock="true"
+			xmlns="sap.m">
+			<App>
+				<Page
+					title="{/name} in {/location}">
+					<content>
+						<List
+							items="{/consumed}">
+							<items>
+								<DisplayListItem
+									label="{product}" />
+							</items>
+						</List>
+					</content>
+				</Page>
+			</App>
+		</mvc:View>
+	</script>
+
+	<script>
+
+		jQuery.sap.require("qmacro.ui.model.yaml.YAMLModel");
+
+		var oModel = new qmacro.ui.model.yaml.YAMLModel();
+		oModel.setYAML(jQuery("#yamldata").html());
+
+		sap.ui.xmlview({ viewContent: jQuery("#Main").html() })
+			.setModel(oModel)
+			.placeAt('content');
+
+	</script>
+
+</head>
+
+<body class="sapUiBody" id="content" />
+</html>
